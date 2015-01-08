@@ -1,0 +1,89 @@
+#
+# Library dependencies for build 'core'
+#
+
+export SPEC_FILES := \
+  /home/aichouch/workspace/genode-imx6/base-hw/mk/spec-hw_imx6_tz.mk \
+
+LIB_CACHE_DIR = /home/aichouch/workspace/genode-imx6/build-hw_imx6_tz/var/libcache
+BASE_DIR      = /home/aichouch/workspace/genode-imx6/base
+VERBOSE      ?= @
+VERBOSE_MK   ?= @
+VERBOSE_DIR  ?= --no-print-directory
+INSTALL_DIR  ?= /home/aichouch/workspace/genode-imx6/build-hw_imx6_tz/bin
+SHELL        ?= /bin/bash
+MKDIR        ?= mkdir
+
+all:
+	@true # prevent nothing-to-be-done message
+
+DEP_core.prg = base-common.lib $(DEP_base-common.lib)
+
+core.prg: base-common.lib
+	@$(MKDIR) -p core/imx6/trustzone
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C core/imx6/trustzone -f $(BASE_DIR)/mk/prg.mk \
+	     REP_DIR=/home/aichouch/workspace/genode-imx6/base-hw \
+	     PRG_REL_DIR=core/imx6/trustzone \
+	     BUILD_BASE_DIR=/home/aichouch/workspace/genode-imx6/build-hw_imx6_tz \
+	     DEPS="$(DEP_core.prg)" \
+	     SHELL=/bin/bash \
+	     INSTALL_DIR="$(INSTALL_DIR)"
+
+DEP_base-common.lib = cxx.lib $(DEP_cxx.lib) syscall.lib $(DEP_syscall.lib)
+
+base-common.lib: cxx.lib syscall.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/base-common
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/base-common -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/aichouch/workspace/genode-imx6/base-hw \
+	     LIB_MK=/home/aichouch/workspace/genode-imx6/base-hw/lib/mk/base-common.mk \
+	     LIB=base-common \
+	     DEPS="$(DEP_base-common.lib)" \
+	     BUILD_BASE_DIR=/home/aichouch/workspace/genode-imx6/build-hw_imx6_tz \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_cxx.lib = platform.lib $(DEP_platform.lib)
+
+cxx.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/cxx
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/cxx -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/aichouch/workspace/genode-imx6/base \
+	     LIB_MK=/home/aichouch/workspace/genode-imx6/base/lib/mk/cxx.mk \
+	     LIB=cxx \
+	     DEPS="$(DEP_cxx.lib)" \
+	     BUILD_BASE_DIR=/home/aichouch/workspace/genode-imx6/build-hw_imx6_tz \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+platform.lib: 
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/platform
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/platform -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/aichouch/workspace/genode-imx6/base \
+	     LIB_MK=/home/aichouch/workspace/genode-imx6/base/lib/mk/platform.mk \
+	     LIB=platform \
+	     DEPS="$(DEP_platform.lib)" \
+	     BUILD_BASE_DIR=/home/aichouch/workspace/genode-imx6/build-hw_imx6_tz \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+DEP_syscall.lib = platform.lib $(DEP_platform.lib)
+
+syscall.lib: platform.lib
+	@$(MKDIR) -p $(LIB_CACHE_DIR)/syscall
+	$(VERBOSE_MK)$(MAKE) --no-print-directory -C $(LIB_CACHE_DIR)/syscall -f $(BASE_DIR)/mk/lib.mk \
+	     REP_DIR=/home/aichouch/workspace/genode-imx6/base-hw \
+	     LIB_MK=/home/aichouch/workspace/genode-imx6/base-hw/lib/mk/arm/syscall.mk \
+	     LIB=syscall \
+	     DEPS="$(DEP_syscall.lib)" \
+	     BUILD_BASE_DIR=/home/aichouch/workspace/genode-imx6/build-hw_imx6_tz \
+	     SHELL=/bin/bash \
+	     SHARED_LIBS="$(SHARED_LIBS)"\
+	     INSTALL_DIR=$(INSTALL_DIR)
+
+
+ifeq ($(filter $(DEP_core.prg:.lib=),$(INVALID_DEPS)),)
+all: core.prg
+endif

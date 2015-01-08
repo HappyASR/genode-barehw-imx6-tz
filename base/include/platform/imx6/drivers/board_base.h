@@ -50,7 +50,7 @@ namespace Genode
 			AIPS_2_MMIO_BASE   = 0x0217c000,
 
 			/* TrustZone Address Space Controller */
-			TZASC_1_MMIO_BASE = 0x100ec000,
+			TZASC_1_MMIO_BASE = 0x021D0000,
 			TZASC_1_MMIO_SIZE = 0x00004000,
 
 			TZASC_2_MMIO_BASE = 0x021D4000,

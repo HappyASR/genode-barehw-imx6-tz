@@ -199,78 +199,6 @@ namespace Genode {
 				printf("  exception = %s\n", exc[_state->cpu_exception]);
 			}
 
-//			void dump()
-//					{
-//						using namespace Genode;
-//
-//						const char * const modes[] =
-//							{ "und", "svc", "abt", "irq", "fiq" };
-//						const char * const exc[] =
-//							{ "invalid", "reset", "undefined", "smc", "pf_abort",
-//						      "data_abort", "irq", "fiq" };
-//
-//						printf("Cpu state:\n");
-//						printf("  Register     Virt     Phys\n");
-//						printf("---------------------------------\n");
-//						printf("  r0         = %08lx [%08lx]\n",
-//						       _state->r0, va_to_pa(_state->r0));
-//						printf("  r1         = %08lx [%08lx]\n",
-//						       _state->r1, va_to_pa(_state->r1));
-//						printf("  r2         = %08lx [%08lx]\n",
-//						       _state->r2, va_to_pa(_state->r2));
-//						printf("  r3         = %08lx [%08lx]\n",
-//						       _state->r3, va_to_pa(_state->r3));
-//						printf("  r4         = %08lx [%08lx]\n",
-//						       _state->r4, va_to_pa(_state->r4));
-//						printf("  r5         = %08lx [%08lx]\n",
-//						       _state->r5, va_to_pa(_state->r5));
-//						printf("  r6         = %08lx [%08lx]\n",
-//						       _state->r6, va_to_pa(_state->r6));
-//						printf("  r7         = %08lx [%08lx]\n",
-//						       _state->r7, va_to_pa(_state->r7));
-//						printf("  r8         = %08lx [%08lx]\n",
-//						       _state->r8, va_to_pa(_state->r8));
-//						printf("  r9         = %08lx [%08lx]\n",
-//						       _state->r9, va_to_pa(_state->r9));
-//						printf("  r10        = %08lx [%08lx]\n",
-//						       _state->r10, va_to_pa(_state->r10));
-//						printf("  r11        = %08lx [%08lx]\n",
-//						       _state->r11, va_to_pa(_state->r11));
-//						printf("  r12        = %08lx [%08lx]\n",
-//						       _state->r12, va_to_pa(_state->r12));
-//						printf("  sp         = %08lx [%08lx]\n",
-//						       _state->sp, va_to_pa(_state->sp));
-//						printf("  lr         = %08lx [%08lx]\n",
-//						       _state->lr, va_to_pa(_state->lr));
-//						printf("  ip         = %08lx [%08lx]\n",
-//						       _state->ip, va_to_pa(_state->ip));
-//						printf("  cpsr       = %08lx\n", _state->cpsr);
-//						for (unsigned i = 0;
-//						     i < Cpu_state_modes::Mode_state::MAX; i++) {
-//							printf("  sp_%s     = %08lx [%08lx]\n", modes[i],
-//							       _state->mode[i].sp, va_to_pa(_state->mode[i].sp));
-//							printf("  lr_%s     = %08lx [%08lx]\n", modes[i],
-//							       _state->mode[i].lr, va_to_pa(_state->mode[i].lr));
-//							printf("  spsr_%s   = %08lx [%08lx]\n", modes[i],
-//							       _state->mode[i].spsr, va_to_pa(_state->mode[i].spsr));
-//						}
-////						printf("  ttbr0      = %08lx\n", _state->ttbr[0]);
-////						printf("  ttbr1      = %08lx\n", _state->ttbr[1]);
-////						printf("  ttbrc      = %08lx\n", _state->ttbrc);
-////						printf("  dfar       = %08lx [%08lx]\n",
-////						       _state->dfar, va_to_pa(_state->dfar));
-//						printf("  exception  = %s\n", exc[_state->cpu_exception]);
-//					}
-//
-//					Genode::addr_t va_to_pa(Genode::addr_t va)
-//					{
-//						try {
-//							Mmu mmu(_state, &_ram);
-//							return mmu.phys_addr(va);
-//						} catch(Ram::Invalid_addr) {}
-//						return 0;
-//					}
-
 			Cpu_state_modes *state() const { return _state; }
 	};
 
@@ -407,7 +335,7 @@ namespace Genode {
 			Vmm(addr_t tsc_base, /*addr_t tpc_base,*/
 				addr_t sys_base, /*addr_t sp810_base,*/
 				Vm    *vm)
-			: _tsc_io_mem(tsc_base,     0x1000),
+			: _tsc_io_mem(tsc_base,     0x4000),
 			  /*_tpc_io_mem(tpc_base,   0x1000), */
 			  _sys_io_mem(sys_base,     0x1000),
 			  /*_sp810_io_mem(sp810_base, 0x1000), */
@@ -419,27 +347,26 @@ namespace Genode {
 	};
 }
 
-
 int main()
 {
 
-//	enum {
-//		SYS_VEA9X4_BASE   = 0x10000000,
-//		SP810_VEA9X4_BASE = 0x10001000,
-//		TPC_VEA9X4_BASE   = 0x100e6000,
-//		TSC_VEA9X4_BASE   = 0x100ec000,
-//		MAIN_MEM_START    = 0x80000000,
-//		MAIN_MEM_SIZE     = 0x10000000
-//	};
+	//	enum {
+	//		SYS_VEA9X4_BASE   = 0x10000000,
+	//		SP810_VEA9X4_BASE = 0x10001000,
+	//		TPC_VEA9X4_BASE   = 0x100e6000,
+	//		TSC_VEA9X4_BASE   = 0x100ec000,
+	//		MAIN_MEM_START    = 0x80000000,
+	//		MAIN_MEM_SIZE     = 0x10000000
+	//	};
 
 	enum {
 			SYS_IMX6_BASE   = 0x0,
-			TSC_IMX6_BASE   = 0x100ec000,
+			TSC_IMX6_BASE   = 0x021D0000,
 			MAIN_MEM_START  = 0x20000000,
 			MAIN_MEM_SIZE   = 0x20000000
 		};
 
-//	static const char* cmdline = "console=ttyAMA0,38400n8 root=/dev/ram0 lpj=1554432";
+	//	static const char* cmdline = "console=ttyAMA0,38400n8 root=/dev/ram0 lpj=1554432";
 	static const char* cmdline = "";
 	static Genode::Vm  vm("linux", "initrd.gz", cmdline, MAIN_MEM_START, MAIN_MEM_SIZE);
 	static Genode::Vmm vmm(TSC_IMX6_BASE, /* TPC_VEA9X4_BASE,  */
